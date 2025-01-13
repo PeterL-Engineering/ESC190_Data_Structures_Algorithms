@@ -17,7 +17,7 @@ int main()
     change_a(&a); // Passes the address of a into change_a
     printf("%d\n", a); // Prints the value of a (42)
     dont_change_a(a); // Just changes the local variable a (still 42)
-    printf("%d\n", a); // Prints the value of a (42)
+    printf("%c\n", a); // Prints the value of a (42)
 
     int *p_a = &a;
     *p_a = 50; // Changes the value of a outside of a function
