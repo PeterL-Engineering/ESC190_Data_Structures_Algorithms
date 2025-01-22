@@ -2,6 +2,10 @@ void change_number(int* p_number){
     * p_number = 40;
 }
 
+void change_number_p(int** p_p_number){
+    ** p_p_number = 40;
+}
+
 int main() {
     char *s1 = "abc"; // warning: implicit conversion to char*
                       // not allowed to modify the contents of a const char*
@@ -44,7 +48,19 @@ int main() {
     // Q7. Call the function named change_int without directly using a, but using p_a instead
 
     change_number(p_a);
-    
+
+    // Q8/9. Define a variable that would store the address of p_a
+
+    int** p_p_a = &p_a;
+
+    // Q10. Write a function that takes in a pointer to a pointer to an integer and changes the value of the integer to 46
+    // See function void_change_p
+
+    // Q11. Write a function that takes in a pointer to a pointer to an integer and changes the value of the 
+    // pointer to a new address where an integer can be stored. (You will need to use malloc)
+
+
+
     return 0;
 
 }
