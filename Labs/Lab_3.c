@@ -81,11 +81,11 @@ typedef struct student2{
     int year;
 } student2;
 
-void create_block2(student2 **p_p_s, int num_studnets){
+void create_block2(student2 **p_p_s, int num_students){
     int i = 0;
     for(i; i == num_students; i++){
-        *(p_p_s)[i].name = '0'
-        *(p_p_s)[i].student_number = '0'
+        (*p_p_s)[i].name = '0';
+        (*p_p_s)[i].student_number = '0';
     }
 }
 
