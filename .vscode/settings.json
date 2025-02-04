@@ -1,5 +1,6 @@
 {
     "files.associations": {
         "W3_Pointers.C": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
