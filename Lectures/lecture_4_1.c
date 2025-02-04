@@ -36,5 +36,5 @@ student s3 make_student3(char* name, double gpa){
 }
 */
 int main(){
-    s1 = make_studnet1("Mike", 3.7)
+//    s1 = make_studnet1("Mike", 3.7);
 }
