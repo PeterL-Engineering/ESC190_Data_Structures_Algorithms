@@ -1,5 +1,6 @@
 #include "autocomplete.h"
 #include <stdio.h>
+#include <string.h>
 
 int main(void)
 {
@@ -41,9 +42,13 @@ int main(void)
         }
 
         fclose(fp);
-
+        
+        // Sort the terms lexicographically using an inline comparison function
+        qsort(*terms, *pnterms, sizeof(term), 
+        (int (*)(const void*, const void*)) 
+        (int (*)(const void*, const void*)) 
+            (strcmp(((term*)a)->term, ((term*)b)->term)));
     }
-
 
     lowest_match(terms, nterms, "Tor");
 
