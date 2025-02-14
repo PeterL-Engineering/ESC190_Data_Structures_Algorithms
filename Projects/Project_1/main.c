@@ -43,24 +43,79 @@ int main(void)
 
         fclose(fp);
         
-        // Sort the terms lexicographically using an inline comparison function
+        // Sort the terms lexicographically using strcmp
         qsort(*terms, *pnterms, sizeof(term), 
         (int (*)(const void*, const void*)) 
         (int (*)(const void*, const void*)) 
             (strcmp(((term*)a)->term, ((term*)b)->term)));
     }
 
-    lowest_match(terms, nterms, "Tor");
+    int lowest_match(term* terms, int nterms, char* substr) {
+        int left = 0;
+        int right = nterms - 1;
+        int res = -1;
+        int len_substr = strlen(substr);
 
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            int cmp = strncmp(terms[mid].term, substr, len_substr);
 
-    highest_match(terms, nterms, "Tor");
+            if (cmp < 0) {
+                // The term at mid is lexicographically less than the prefix.
+                left = mid + 1;
+            } else {
+                // The term at mid is greater than or equal to the prefix.
+                res = mid;
+                right = mid - 1;
+            }
+        }
+
+        // Verify that the candidate actually starts with the prefix.
+        if (res != -1 && strncmp(terms[res].term, substr, len_substr) == 0) {
+            return res;
+        }
+        return -1;
+    }
+
+    highest_match(struct term* terms, int nterms, char* substr){
+        int left = 0;
+        int right = nterms - 1;
+        int res = -1;
+        int len_substr = strlen(substr);
+
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            int cmp = strncmp(terms[mid].term, substr, len_substr);
+
+            if (cmp <= 0) {
+                // Mid is lexicographically less or equal to substr
+                if (cmp == 0){
+                    // Update res and continue looking right
+                    res = mid;
+                }
+                left = mid + 1;
+            }
+            else {
+                // Mid is lexicographically more than substr
+                right = mid - 1
+            }
+        }
+
+        // Verify that the candidate actually starts with the prefix.
+        if (res != -1 && strncmp(terms[res].term, substr, len_substr) == 0) {
+            return res;
+        }
+        return -1;
+    }
     
     struct term *answer;
     int n_answer;
     autocomplete(&answer, &n_answer, terms, nterms, "Tor");
     
-    free(terms);
     //free allocated blocks here -- not required for the project, but good practice
+
+    free(terms);
+
     return 0;
 }
 
