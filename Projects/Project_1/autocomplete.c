@@ -16,25 +16,69 @@ void read_in_terms(struct term **terms, int *pnterms, char *filename) {
         printf("Error opening file\n");
         return;
     }
+
     char line[200];
     *pnterms = 0;
+
+    // First pass: Count the number of valid terms.
     while (fgets(line, sizeof(line), fp)) {
+        // Trim leading and trailing whitespace
+        size_t len = strlen(line);
+        while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) {
+            line[--len] = '\0';
+        }
+        
+        // Skip empty lines or lines without a tab separator
+        if (len == 0 || strchr(line, '\t') == NULL) {
+            continue;
+        }
+
         (*pnterms)++;
     }
+
+    // Allocate memory for the terms
     *terms = (struct term*)malloc(*pnterms * sizeof(struct term));
     if (*terms == NULL) {
         printf("Memory allocation failed\n");
         fclose(fp);
         return;
     }
+
+    // Rewind file and read terms into allocated memory
     rewind(fp);
     for (i = 0; i < *pnterms; i++) {
         if (fgets(line, sizeof(line), fp)) {
-            sscanf(line, "%lf\t%199s", &(*terms)[i].weight, (*terms)[i].term);
+            // Trim leading whitespace
+            size_t start = 0;
+            while (isspace((unsigned char)line[start])) {
+                start++;
+            }
+            
+            // Shift the line left to remove leading spaces
+            if (start > 0) {
+                memmove(line, line + start, strlen(line) - start + 1);
+            }
+
+            // Remove trailing whitespace or carriage return characters
+            size_t len = strlen(line);
+            while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) {
+                line[--len] = '\0';
+            }
+
+            // Ensure sscanf successfully parses a weight and term
+            if (sscanf(line, "%lf\t%199[^\n]", &(*terms)[i].weight, (*terms)[i].term) != 2) {
+                printf("Error parsing line: '%s'\n", line);
+                i--;  // Decrement index to avoid skipping terms if parsing failed
+
+                // Set a default empty term to avoid uninitialized term strings
+                (*terms)[i].term[0] = '\0';
+            }
         }
     }
 
     fclose(fp);
+
+    // Sort the terms in lexicographic order
     qsort(*terms, *pnterms, sizeof(struct term), compare_terms);
 }
 
