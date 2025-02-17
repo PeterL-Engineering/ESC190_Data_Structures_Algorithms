@@ -23,7 +23,7 @@ void read_in_terms(struct term **terms, int *pnterms, char *filename) {
     }
     
     char line[200];
-    *pnterms = 0;
+    *pnterms = -1;
     
     // Count the number of lines (terms) in the file
     while (fgets(line, sizeof(line), fp)) {
