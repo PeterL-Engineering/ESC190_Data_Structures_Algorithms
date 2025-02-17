@@ -2,7 +2,7 @@
 #include <string.h>
 #include "intlist.h"
 
-/*
+
 // Allocate memory for an object of type IntList, initialize
 // its data to equal the data in data_arr, and set its size
 // Store the address of the new object in *p_IntList
@@ -70,7 +70,6 @@ int list_get(intlist* p_list, int index){
 }
 
 #endif
-*/
 
 void print_array(int arr[], int size) {
     for (int i = 0; i < size; i++) {

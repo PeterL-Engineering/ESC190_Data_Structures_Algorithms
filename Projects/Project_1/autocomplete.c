@@ -104,7 +104,7 @@ int main(void)
                     // Update res and continue searching to the right
                     res = mid;
                 }
-                right = mid - 1;
+                left = mid + 1;
             }
         }
     
@@ -152,9 +152,7 @@ int main(void)
     }    
     
     //free allocated blocks here -- not required for the project, but good practice
-
-    free(terms);
-
+    
     return 0;
 }
 
