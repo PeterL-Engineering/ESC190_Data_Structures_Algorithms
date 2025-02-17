@@ -5,7 +5,7 @@
 #include <ctype.h>
 
 // Comparator function for read_in_terms qsort
-int sort_lexico(const void *a, const void *b) {
+int compare_terms(const void *a, const void *b) {
     // Cast the void pointers to 'term' pointers
     const struct term *termA = (const struct term *)a;
     const struct term *termB = (const struct term *)b;
@@ -14,55 +14,33 @@ int sort_lexico(const void *a, const void *b) {
     return strcmp(termA->term, termB->term);
 }
 
-int char_to_int (char *string, int *weight){
-
-    int length_of_string = length(string);
-    
-    for(int i = 0; i < length_of_string; i++){
-
-        if (isdigit(string[i])){
-            string[i]= string[i] - '0';
-
-            *weight = *weight * 10 + string[i];
-        }
-    return *weight;
-    }
-}
-
 void read_in_terms(struct term **terms, int *pnterms, char *filename) {
-    FILE *fp = fopen(filename, "r");  // Open the file for reading
+    int i = 0;
+    FILE *fp = fopen(filename, "r");
     if (fp == NULL) {
         printf("Error opening file\n");
         return;
     }
-    
     char line[200];
-    fgets(line, sizeof(line), fp);  // Read the first line
-    line[strlen(line) - 1] = '\0';  // Remove the newline character
-    *pnterms = atoi(line);  // Convert the first line to number of terms
-
-    *terms = (struct term*)malloc(*pnterms * sizeof(struct term));  // Allocate memory for the terms
+    *pnterms = 0;
+    while (fgets(line, sizeof(line), fp)) {
+        (*pnterms)++;
+    }
+    *terms = (struct term*)malloc(*pnterms * sizeof(struct term));
     if (*terms == NULL) {
         printf("Memory allocation failed\n");
         fclose(fp);
         return;
     }
-
-    for (int j = 0; j < *pnterms; j++) {
-        fgets(line, sizeof(line), fp);  // Read each subsequent line
-        int weight = 0;
-
-        char *weight_char = strtok(line, "\t");  // Get the weight part of the line
-        weight = char_to_int(weight_char, &weight);  // Convert weight from string to int
-        (*terms)[j].weight = weight;  // Store the weight in the struct
-
-        char *term_to_save = strtok(NULL, "\n");  // Get the term part of the line
-        strcpy((*terms)[j].term, term_to_save);  // Store the term in the struct
+    rewind(fp);
+    for (i = 0; i < *pnterms; i++) {
+        if (fgets(line, sizeof(line), fp)) {
+            sscanf(line, "%lf\t%199s", &(*terms)[i].weight, (*terms)[i].term);
+        }
     }
 
-    fclose(fp);  // Close the file after reading
-
-    qsort(*terms, *pnterms, sizeof(struct term), sort_lexico);  // Sort the terms lexicographically
+    fclose(fp);
+    qsort(*terms, *pnterms, sizeof(struct term), compare_terms);
 }
 
 int lowest_match(struct term* terms, int nterms, char* substr) {
