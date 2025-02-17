@@ -10,40 +10,57 @@ int compare_terms(const void *a, const void *b) {
 
 void read_in_terms(struct term **terms, int *pnterms, char *filename) {
     int i = 0;
-    FILE *fp = fopen(filename, "r");
+    FILE *fp = fopen(filename, "r");  // Open the file for reading.
     if (fp == NULL) {
         printf("Error opening file\n");
-        return;
+        return;  // Return if the file cannot be opened.
     }
-    char line[200];
+
+    char line[200];  // Buffer to hold each line from the file.
     *pnterms = 0;
+
+    // First pass: Count the number of terms in the file.
     while (fgets(line, sizeof(line), fp)) {
         (*pnterms)++;
     }
+
+    // Allocate memory for the terms.
     *terms = (struct term*)malloc(*pnterms * sizeof(struct term));
     if (*terms == NULL) {
         printf("Memory allocation failed\n");
-        fclose(fp);
+        fclose(fp);  // Close the file to avoid memory leak.
         return;
     }
-    rewind(fp);
+
+    rewind(fp);  // Reset the file pointer to the beginning.
+
+    // Second pass: Read terms and weights into the allocated memory.
     for (i = 0; i < *pnterms; i++) {
         if (fgets(line, sizeof(line), fp)) {
             sscanf(line, "%lf\t%199s", &(*terms)[i].weight, (*terms)[i].term);
         }
     }
-    fclose(fp);
+
+    fclose(fp);  // Close the file once done.
+
+    // Sort the terms in lexicographic order.
     qsort(*terms, *pnterms, sizeof(struct term), compare_terms);
 }
 
+
 int lowest_match(struct term* terms, int nterms, char* substr) {
-    if (nterms == 0) return -1;
+    if (nterms == 0) {
+        return -1;
+    }
     int left = 0, right = nterms - 1, res = -1;
     int len_substr = strlen(substr);
+
     while (left <= right) {
         int mid = (left + right) / 2;
         int cmp = strncmp(terms[mid].term, substr, len_substr);
-        if (cmp < 0) left = mid + 1;
+        if (cmp < 0) {
+            left = mid + 1;
+        }
         else {
             res = mid;
             right = mid - 1;
@@ -58,10 +75,16 @@ int highest_match(struct term* terms, int nterms, char* substr) {
     while (left <= right) {
         int mid = (left + right) / 2;
         int cmp = strncmp(terms[mid].term, substr, len_substr);
-        if (cmp < 0) left = mid + 1;
+        if (cmp < 0) {
+            left = mid + 1;
+        }
+        else if (cmp == 0) {
+                res = mid;
+                left = mid + 1;
+        }
         else {
-            if (cmp == 0) res = mid;
             right = mid - 1;
+        }
         }
     }
     return (res != -1 && strncmp(terms[res].term, substr, len_substr) == 0) ? res : -1;
