@@ -14,6 +14,21 @@ int sort_lexico(const void *a, const void *b) {
     return strcmp(termA->term, termB->term);
 }
 
+int char_to_int (char *string, int *weight){
+
+    int length_of_string = length(string);
+    
+    for(int i = 0; i < length_of_string; i++){
+
+        if (isdigit(string[i])){
+            string[i]= string[i] - '0';
+
+            *weight = *weight * 10 + string[i];
+        }
+    return *weight;
+    }
+}
+
 void read_in_terms(struct term **terms, int *pnterms, char *filename) {
     FILE *fp = fopen(filename, "r");  // Open the file for reading
     if (fp == NULL) {
