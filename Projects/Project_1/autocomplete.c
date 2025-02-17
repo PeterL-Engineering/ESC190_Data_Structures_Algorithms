@@ -3,10 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-int main() {
-    return 0;
-}
-
 // Comparator function for qsort
 int compare_terms(const void *a, const void *b) {
     return strcmp(((struct term*)a)->term, ((struct term*)b)->term);
