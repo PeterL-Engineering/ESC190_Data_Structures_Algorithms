@@ -72,10 +72,11 @@ int highest_match(struct term* terms, int nterms, char* substr) {
                 left = mid + 1;
         }
         else {
-            right = mid - 1
+            right = mid - 1;
         }
-        }
+
     }
+    
     return (res != -1 && strncmp(terms[res].term, substr, len_substr) == 0) ? res : -1;
 }
 
