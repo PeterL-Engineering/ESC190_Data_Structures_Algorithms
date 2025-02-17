@@ -10,43 +10,32 @@ int compare_terms(const void *a, const void *b) {
 
 void read_in_terms(struct term **terms, int *pnterms, char *filename) {
     int i = 0;
-    FILE *fp = fopen(filename, "r");  // Open the file for reading.
+    FILE *fp = fopen(filename, "r");
     if (fp == NULL) {
         printf("Error opening file\n");
-        return;  // Return if the file cannot be opened.
+        return;
     }
-
-    char line[200];  // Buffer to hold each line from the file.
+    char line[200];
     *pnterms = 0;
-
-    // First pass: Count the number of terms in the file.
     while (fgets(line, sizeof(line), fp)) {
         (*pnterms)++;
     }
-
-    // Allocate memory for the terms.
     *terms = (struct term*)malloc(*pnterms * sizeof(struct term));
     if (*terms == NULL) {
         printf("Memory allocation failed\n");
-        fclose(fp);  // Close the file to avoid memory leak.
+        fclose(fp);
         return;
     }
-
-    rewind(fp);  // Reset the file pointer to the beginning.
-
-    // Second pass: Read terms and weights into the allocated memory.
+    rewind(fp);
     for (i = 0; i < *pnterms; i++) {
         if (fgets(line, sizeof(line), fp)) {
             sscanf(line, "%lf\t%199s", &(*terms)[i].weight, (*terms)[i].term);
         }
     }
 
-    fclose(fp);  // Close the file once done.
-
-    // Sort the terms in lexicographic order.
+    fclose(fp);
     qsort(*terms, *pnterms, sizeof(struct term), compare_terms);
 }
-
 
 int lowest_match(struct term* terms, int nterms, char* substr) {
     if (nterms == 0) {
@@ -83,7 +72,7 @@ int highest_match(struct term* terms, int nterms, char* substr) {
                 left = mid + 1;
         }
         else {
-            right = mid - 1;
+            right = mid - 1
         }
         }
     }
