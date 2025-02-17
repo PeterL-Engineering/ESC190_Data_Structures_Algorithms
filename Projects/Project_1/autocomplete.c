@@ -2,83 +2,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 // Comparator function for qsort
 int compare_terms(const void *a, const void *b) {
     return strcmp(((struct term*)a)->term, ((struct term*)b)->term);
 }
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 void read_in_terms(struct term **terms, int *pnterms, char *filename) {
     int i = 0;
-    FILE *fp = fopen(filename, "r");  // Open the file for reading.
+    FILE *fp = fopen(filename, "r");
     if (fp == NULL) {
         printf("Error opening file\n");
-        return;  // Return if the file cannot be opened.
+        return;
     }
-
-    char line[200];  // Buffer to hold each line from the file.
+    char line[200];
     *pnterms = 0;
-
-    // First pass: Count the number of terms in the file.
     while (fgets(line, sizeof(line), fp)) {
-        // Remove any trailing whitespace or carriage return characters
-        size_t len = strlen(line);
-        while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) {
-            line[--len] = '\0';  // Null-terminate the line after trimming.
-        }
-
-        // Check if the line contains a valid tab separator
-        if (strchr(line, '\t')) {
-            (*pnterms)++;
-        }
+        (*pnterms)++;
     }
-
-    // Allocate memory for the terms.
     *terms = (struct term*)malloc(*pnterms * sizeof(struct term));
     if (*terms == NULL) {
         printf("Memory allocation failed\n");
-        fclose(fp);  // Close the file to avoid memory leak.
+        fclose(fp);
         return;
     }
-
-    rewind(fp);  // Reset the file pointer to the beginning.
-
-    // Second pass: Read terms and weights into the allocated memory.
+    rewind(fp);
     for (i = 0; i < *pnterms; i++) {
         if (fgets(line, sizeof(line), fp)) {
-            // Remove leading whitespace
-            size_t start = 0;
-            while (isspace((unsigned char)line[start])) {
-                start++;  // Skip leading spaces
-            }
-            
-            // Shift the line left to remove leading spaces
-            if (start > 0) {
-                memmove(line, line + start, strlen(line) - start + 1);
-            }
-
-            // Remove trailing whitespace or carriage return characters
-            size_t len = strlen(line);
-            while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) {
-                line[--len] = '\0';  // Null-terminate the line after trimming.
-            }
-
-            // Ensure sscanf successfully parses a weight and term
-            if (sscanf(line, "%lf\t%199[^\n]", &(*terms)[i].weight, (*terms)[i].term) != 2) {
-                printf("Error parsing line: '%s'\n", line);
-                continue;  // Skip invalid lines.
-            }
+            sscanf(line, "%lf\t%199s", &(*terms)[i].weight, (*terms)[i].term);
         }
     }
 
-    fclose(fp);  // Close the file once done.
-
-    // Sort the terms in lexicographic order.
+    fclose(fp);
     qsort(*terms, *pnterms, sizeof(struct term), compare_terms);
 }
 
