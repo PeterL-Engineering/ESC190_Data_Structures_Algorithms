@@ -21,11 +21,18 @@ void read_in_terms(struct term **terms, int *pnterms, char *filename) {
         printf("Error opening file\n");
         return;
     }
-    
+
     char line[200];
-    *pnterms = -1;
-    
-    // Count the number of lines (terms) in the file
+    *pnterms = 0;
+
+    // Skip the first line
+    if (!fgets(line, sizeof(line), fp)) {
+        printf("Error reading file\n");
+        fclose(fp);
+        return;
+    }
+
+    // Count the number of lines (terms) in the file, starting from the second line
     while (fgets(line, sizeof(line), fp)) {
         (*pnterms)++;
     }
@@ -40,21 +47,27 @@ void read_in_terms(struct term **terms, int *pnterms, char *filename) {
 
     rewind(fp);  // Rewind to the beginning of the file
 
+    // Skip the first line again
+    if (!fgets(line, sizeof(line), fp)) {
+        printf("Error reading file\n");
+        fclose(fp);
+        return;
+    }
+
     // Read each line and extract the weight and term
     for (i = 0; i < *pnterms; i++) {
         if (fgets(line, sizeof(line), fp)) {
-            // Tokenize the line by tab characters to separate weight and term
-            char *weight_char = strtok(line, "\t");  // Get the weight (before tab)
-            char *term_to_save = strtok(NULL, "\n"); // Get the term (after tab, until newline)
+            char *weight_char = strtok(line, "\t");  
+            char *term_to_save = strtok(NULL, "\n"); 
 
             if (weight_char != NULL && term_to_save != NULL) {
-                (*terms)[i].weight = atof(weight_char);  // Convert weight to float (for decimal weights)
-                strcpy((*terms)[i].term, term_to_save);  // Copy the term string
+                (*terms)[i].weight = atof(weight_char);  
+                strcpy((*terms)[i].term, term_to_save);
             }
         }
     }
 
-    fclose(fp);  // Close the file
+    fclose(fp);
 
     // Sort the terms lexicographically
     qsort(*terms, *pnterms, sizeof(struct term), compare_terms);
