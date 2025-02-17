@@ -10,30 +10,47 @@ int compare_terms(const void *a, const void *b) {
 
 void read_in_terms(struct term **terms, int *pnterms, char *filename) {
     int i = 0;
-    FILE *fp = fopen(filename, "r");
+    FILE *fp = fopen(filename, "r");  // Open the file for reading.
     if (fp == NULL) {
         printf("Error opening file\n");
-        return;
+        return;  // Return if the file cannot be opened.
     }
-    char line[200];
+
+    char line[200];  // Buffer to hold each line from the file.
     *pnterms = 0;
+
+    // First pass: Count the number of terms in the file.
     while (fgets(line, sizeof(line), fp)) {
-        (*pnterms)++;
-    }
-    *terms = (struct term*)malloc(*pnterms * sizeof(struct term));
-    if (*terms == NULL) {
-        printf("Memory allocation failed\n");
-        fclose(fp);
-        return;
-    }
-    rewind(fp);
-    for (i = 0; i < *pnterms; i++) {
-        if (fgets(line, sizeof(line), fp)) {
-            sscanf(line, "%lf\t%199s", &(*terms)[i].weight, (*terms)[i].term);
+        // Check if the line contains a valid term and weight.
+        if (strchr(line, '\t')) {  // Ensure the line contains a tab separator.
+            (*pnterms)++;
         }
     }
 
-    fclose(fp);
+    // Allocate memory for the terms.
+    *terms = (struct term*)malloc(*pnterms * sizeof(struct term));
+    if (*terms == NULL) {
+        printf("Memory allocation failed\n");
+        fclose(fp);  // Close the file to avoid memory leak.
+        return;
+    }
+
+    rewind(fp);  // Reset the file pointer to the beginning.
+
+    // Second pass: Read terms and weights into the allocated memory.
+    for (i = 0; i < *pnterms; i++) {
+        if (fgets(line, sizeof(line), fp)) {
+            // Ensure sscanf successfully parses a weight and term.
+            if (sscanf(line, "%lf\t%199s", &(*terms)[i].weight, (*terms)[i].term) != 2) {
+                printf("Error parsing line: %s\n", line);
+                continue;  // Skip invalid lines.
+            }
+        }
+    }
+
+    fclose(fp);  // Close the file once done.
+
+    // Sort the terms in lexicographic order.
     qsort(*terms, *pnterms, sizeof(struct term), compare_terms);
 }
 
