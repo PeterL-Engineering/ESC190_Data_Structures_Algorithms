@@ -25,11 +25,63 @@ int main(){
     return 0;
 }
 
-// Q. 8. Write a program in C to print all permutations of a given string using pointers. 
+// Q. 8 Write a program in C to print all permutations of a given string using pointers. 
 
-void permutations(char word, int* size_of_word){
+void change_position(char *char1, char *char2){
+    char temp;
+    temp = *char1;
+    *char1 = *char2;
+    *char2 = temp;
+}
+
+void permutations(char *word, int start, int end){
     int i = 0;
-    for(i; i == size_of_word; i++){
-        for()
+    if (start == end){
+        printf("%s  ", word)
     }
+    else{       
+        for(i; i <= end; i++){
+            change_position((word + start), (word + i));
+            permutations(char, start + 1, end);
+            change_position((word + start), (word + i));
+        }
+    }
+}
+
+// Q. 9 Write a program in C to find the largest element using Dynamic Memory Allocation.
+// Test Data :
+// Input total number of elements(1 to 100): 5 
+
+int largest_element(int *arr, int sz){
+    int i = 0;
+    int res = -1;
+    for (i; i < sz; i++){
+        if (arr[i] > res){
+            res = arr[i];
+        }
+    }
+
+    return res;
+}
+
+// Q. 10 Write a program in C to calculate the length of a string using a pointer. 
+
+int str_len_pointer(char *str){
+    int i = 0;
+
+    while(*(str + i) != '\0'){
+        i++;
+    }
+    return i;
+}
+
+// Q. 11 11. Write a program in C to swap elements using call by reference.
+
+void swap_elem(int *arr, int sz){
+    int i = sz - 1;
+    int last = arr[i];
+    for(i; i > 0; i--){
+        arr[i] = arr[i - 1];
+    }
+    arr[0] = last;
 }
