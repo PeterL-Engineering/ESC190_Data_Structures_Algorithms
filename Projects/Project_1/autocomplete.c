@@ -5,8 +5,13 @@
 #include <ctype.h>
 
 // Comparator function for read_in_terms qsort
-int compare_terms(const void *a, const void *b) {
-    return strcmp(((struct term*)a)->term, ((struct term*)b)->term);
+int sort_lexico(const void *a, const void *b) {
+    // Cast the void pointers to 'term' pointers
+    const struct term *termA = (const struct term *)a;
+    const struct term *termB = (const struct term *)b;
+
+    // Compare the 'term' strings lexicographically using strcmp
+    return strcmp(termA->term, termB->term);
 }
 
 void read_in_terms(struct term **terms, int *pnterms, char *filename) {
@@ -44,7 +49,6 @@ void read_in_terms(struct term **terms, int *pnterms, char *filename) {
 
     qsort(*terms, *pnterms, sizeof(struct term), sort_lexico);  // Sort the terms lexicographically
 }
-
 
 int lowest_match(struct term* terms, int nterms, char* substr) {
     if (nterms == 0) {
