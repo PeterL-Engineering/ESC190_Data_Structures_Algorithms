@@ -10,33 +10,41 @@ int compare_terms(const void *a, const void *b) {
 }
 
 void read_in_terms(struct term **terms, int *pnterms, char *filename) {
-    int i = 0;
-    FILE *fp = fopen(filename, "r");
+    FILE *fp = fopen(filename, "r");  // Open the file for reading
     if (fp == NULL) {
         printf("Error opening file\n");
         return;
     }
+    
     char line[200];
-    *pnterms = 0;
-    while (fgets(line, sizeof(line), fp)) {
-        (*pnterms)++;
-    }
-    *terms = (struct term*)malloc(*pnterms * sizeof(struct term));
+    fgets(line, sizeof(line), fp);  // Read the first line
+    line[strlen(line) - 1] = '\0';  // Remove the newline character
+    *pnterms = atoi(line);  // Convert the first line to number of terms
+
+    *terms = (struct term*)malloc(*pnterms * sizeof(struct term));  // Allocate memory for the terms
     if (*terms == NULL) {
         printf("Memory allocation failed\n");
         fclose(fp);
         return;
     }
-    rewind(fp);
-    for (i = 0; i < *pnterms; i++) {
-        if (fgets(line, sizeof(line), fp)) {
-            sscanf(line, "%lf\t%199s", &(*terms)[i].weight, (*terms)[i].term);
-        }
+
+    for (int j = 0; j < *pnterms; j++) {
+        fgets(line, sizeof(line), fp);  // Read each subsequent line
+        int weight = 0;
+
+        char *weight_char = strtok(line, "\t");  // Get the weight part of the line
+        weight = char_to_int(weight_char, &weight);  // Convert weight from string to int
+        (*terms)[j].weight = weight;  // Store the weight in the struct
+
+        char *term_to_save = strtok(NULL, "\n");  // Get the term part of the line
+        strcpy((*terms)[j].term, term_to_save);  // Store the term in the struct
     }
 
-    fclose(fp);
-    qsort(*terms, *pnterms, sizeof(struct term), compare_terms);
+    fclose(fp);  // Close the file after reading
+
+    qsort(*terms, *pnterms, sizeof(struct term), sort_lexico);  // Sort the terms lexicographically
 }
+
 
 int lowest_match(struct term* terms, int nterms, char* substr) {
     if (nterms == 0) {
