@@ -8,6 +8,11 @@ int compare_terms(const void *a, const void *b) {
     return strcmp(((struct term*)a)->term, ((struct term*)b)->term);
 }
 
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 void read_in_terms(struct term **terms, int *pnterms, char *filename) {
     int i = 0;
     FILE *fp = fopen(filename, "r");  // Open the file for reading.
@@ -21,8 +26,14 @@ void read_in_terms(struct term **terms, int *pnterms, char *filename) {
 
     // First pass: Count the number of terms in the file.
     while (fgets(line, sizeof(line), fp)) {
-        // Check if the line contains a valid term and weight.
-        if (strchr(line, '\t')) {  // Ensure the line contains a tab separator.
+        // Remove any trailing whitespace or carriage return characters
+        size_t len = strlen(line);
+        while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) {
+            line[--len] = '\0';  // Null-terminate the line after trimming.
+        }
+
+        // Check if the line contains a valid tab separator
+        if (strchr(line, '\t')) {
             (*pnterms)++;
         }
     }
@@ -40,9 +51,26 @@ void read_in_terms(struct term **terms, int *pnterms, char *filename) {
     // Second pass: Read terms and weights into the allocated memory.
     for (i = 0; i < *pnterms; i++) {
         if (fgets(line, sizeof(line), fp)) {
-            // Ensure sscanf successfully parses a weight and term.
-            if (sscanf(line, "%lf\t%199s", &(*terms)[i].weight, (*terms)[i].term) != 2) {
-                printf("Error parsing line: %s\n", line);
+            // Remove leading whitespace
+            size_t start = 0;
+            while (isspace((unsigned char)line[start])) {
+                start++;  // Skip leading spaces
+            }
+            
+            // Shift the line left to remove leading spaces
+            if (start > 0) {
+                memmove(line, line + start, strlen(line) - start + 1);
+            }
+
+            // Remove trailing whitespace or carriage return characters
+            size_t len = strlen(line);
+            while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) {
+                line[--len] = '\0';  // Null-terminate the line after trimming.
+            }
+
+            // Ensure sscanf successfully parses a weight and term
+            if (sscanf(line, "%lf\t%199[^\n]", &(*terms)[i].weight, (*terms)[i].term) != 2) {
+                printf("Error parsing line: '%s'\n", line);
                 continue;  // Skip invalid lines.
             }
         }
