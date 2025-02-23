@@ -85,3 +85,17 @@ void swap_elem(int *arr, int sz){
     }
     arr[0] = last;
 }
+
+// Q. 18 Write a program in C to demonstrate the use of pointers to structures.
+// Expected Output :
+
+// John Alter from Court Street
+
+typedef struct Person{
+    char name[20];
+    char street[40];
+} person;
+
+person *one{"John Alter", "Court Street"};
+
+printf("%s from %s" (*one).name, (*one).street);

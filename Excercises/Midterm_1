@@ -1,0 +1,51 @@
+// Lab 3
+
+void print_student(student1 *student) {
+    printf("Name: %s\n", student->name);
+    printf("Student Number: %ld\n", student->student_number);
+    printf("Year: %d\n", student->year);
+}
+
+void set_default_name(student1 *p_s){
+    strcpy(p_s->name, "Default Student");
+    p_s->year = 0;
+}
+
+void set_default_name_wrong(student1 s){
+    strcpy(s.name, "Deafult Student");
+    s.year = 0;
+}
+
+void create_block1(student1 **p_p_s, int n_students){
+    *p_p_s = (student1*)malloc(n_students * sizeof(student1));
+}
+
+void set_name(student1 *p_s, const char* name){
+    strcpy(p_s->name, name, strlen(p_s->name) - 1);
+    p_s->name[-1] = "\0";
+}
+
+void destroy_block1(student1 *p_s){
+    free(p_s);
+}
+
+typedef struct student2{
+    char *name;
+    char *student_number;
+    int year;
+} student2;
+
+void create_block2(student2 **p_p_s, int num_students){
+    *p_p_s = (student2*)malloc(num_students * sizeof(student2));
+
+    int i = 0;
+    for(i; i<= num_students; i++){
+        *p_p_s->name = NULL;
+        *p_p_s->student_number = NULL;
+    }
+}
+
+void set_name2(student2 **p_p_s, const char *name){
+    *p_p_s->name = (const char*)realloc(p_s.name, strlen(name) + 1);
+    strcpy(**p_p_s->name, name)
+}
