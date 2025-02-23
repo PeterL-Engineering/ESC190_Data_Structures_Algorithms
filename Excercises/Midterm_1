@@ -49,3 +49,154 @@ void set_name2(student2 **p_p_s, const char *name){
     *p_p_s->name = (const char*)realloc(p_s.name, strlen(name) + 1);
     strcpy(**p_p_s->name, name)
 }
+
+// Winter 2024
+
+// Q. 1b
+
+int sum_odd(int *arr, int sz){
+    int i = 0;
+    int res = 0;
+    for (i; i <= sz; i++){
+        if i % 2 != 0{
+            res += arr[i];
+        }
+    }
+    return res;
+}
+
+// Q. 1c
+
+int compare(const void *a, const void *b){
+    return(*(int*)a - *(int*)b);
+}
+
+void print_incr_order(int *arr, int sz){
+    int i = 0;
+
+    int *temp = (int*)malloc(sz * sizeof(int));
+    for(i; i <= sz; i++){
+        temp[i] = arr[i];
+    }
+
+    qsort(temp, sz, sizeof(int), compare);
+    
+    // Loop through ordered list and print
+    for(i = 0; i <= sz; i++){
+        printf("%d, " temp[i]);
+    }
+
+    free(temp);
+}
+
+// Q. 2
+
+int last_occurence(char *str1, char *str2){
+    int res = -1;
+
+    int sz_1 = strlen(str1);
+    int sz_2 = strlen(str2);
+
+    for (int i = 0; i < len1; i++){
+        if (strncmp(str1 + i, str2, len2) == 0){
+            res = i
+        }
+    }
+
+    return res;
+}
+
+int first_occurence(char *str1, char *str2, int i, int j){
+    // Base Case
+    if (str1[i] == '\0' and str2[j] == '\0') {
+        return -1;
+    }
+
+    if (str1[i] == str2[j]) {
+
+        if (str2[j + 1] == '\0') {
+
+            return i - j;
+        }
+
+        first_occurence(str1, str2, i + 1, j + 1);
+    }
+
+    first_occurence(str1, str2, i + 1, 0);
+}
+
+// Q. 4
+
+typedef struct student{
+    int student_num[11]:
+    int marks[10];
+}student;
+
+void read_in_students(char *str, student *s){
+    int i = 0;
+    while (str[i] != ' ') {
+        s->student_num[i] = str[i];
+        i++;
+    }
+    s->student_num[i] = '\0';
+    i++;
+    int j = 0;
+    while (str[i] != '\n') {
+        char temp[4];
+        int k = 0;
+        while (str[i] != ' ' && str[i] != '\n') {
+            temp[k] = str[i];
+            k++;
+            i++;
+        }
+        temp[k] = '\0';
+        s->marks[j] = atoi(temp);
+        j++;
+
+    }
+
+}
+
+void read_students_from_file(char *filename, student *s, int *num_students){
+    FILE *f = fopen(filename, "r");
+    int i = 0;
+    while (feof(f) != True) {
+        read_in_students(f, &s[i]);
+        i++;
+    }
+
+    *num_students = i;
+    fclose(f);
+}
+
+void print_smartest_students(char *filename){
+    student s[100];
+    int num_students;
+
+    read_students_from_file(filename, s, &num_students);
+    
+    int highest_avg = 0;
+    for (int i = 0; i < num_students; i++) {
+        int sum = 0;
+        for (int j = 0; j < 10; j++) {
+            sum += s[i].marks[j];
+        }
+
+        int avg = sum / 10; // Not necessarily the correct average but works for purposes
+        if (avg > highest_avg) {
+            highest_avg = avg;
+        }
+    }
+
+    for (int i = 0; i < num_students; i++) {
+        int sum = 0;
+        for (int j = 0; j < 10; j++) {
+            sum += s[i].marks[j];
+        }
+
+        int avg = sum / 10;
+        if (avg = highest_avg) {
+            printf("%s\n", s[i].student_number)
+        }
+    }
+}
