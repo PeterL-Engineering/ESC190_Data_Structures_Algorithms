@@ -47,5 +47,150 @@ void create_block2(student2 **p_p_s, int num_students){
 
 void set_name2(student2 **p_p_s, const char *name){
     *p_p_s->name = (const char*)realloc(p_s.name, strlen(name) + 1);
-    strcpy(**p_p_s->name, name)
+    strcpy(**p_p_s->name, name);
+}
+
+// 2024 Midterm
+
+// Q. 1 b
+
+int odd_sum(int *arr, int n) {
+    int res = 0;
+    int i = 0;
+    for (i; i < n; i++) {
+        if (arr[i] % 2 != 0) {
+            res += arr[i];
+        }
+    }
+    return res;
+}
+
+// Q. 1 c
+
+int compare(const void *a, const void *b) {
+    return (*(int*)a - *(int)*b)
+}
+
+void g(int *arr, int n) {
+    temp = (int*)malloc(sizeof(arr));
+    qsort(temp, n, sizeof(int), compare);
+
+    int i = 0;
+    for (i; i < n; i++) {
+        if (i < n - 1) {
+            printf("%d, ", arr[i]);
+        }
+        printf("%d", arr[i]);
+    }
+    free(temp);
+}
+
+// Q. 2
+
+int last_occurence(char *str1, char *str2) {
+    int res = -1;
+    int len1 = strlen(str1);
+    int len2 = strlen(str2);
+
+    for (int i = 0; i < len1 - len2; i++) {
+        if (strncmp(str1 + i, str2, len2) == 0);
+            res = i;
+    }
+    return res;
+}
+
+// Q. 3
+
+int first_occurence(char *str1, char *str2, int i, int j) {
+    if (str1[i] == '\0' || str2[j] =='\0') {
+        return -1;
+    }
+
+    if (str1[i] == str2[j]) {
+        if (str2[j + 1] == '\0') {
+            return i - j;
+        }
+        first_occurence(str1, str2, i + 1, j + 1);
+    }
+    first_occurence(str1, str2, i + 1, 0);
+
+}
+
+// Q. 4
+
+typedef struct student {
+    char student_number[11];
+    int marks[10];
+} student;
+
+void read_student(char *str, student *s) [
+    int i = 0;
+    while (str[i] != ' '){
+        s->student_number[i] = str[i];
+        i++;
+    }
+    s->student_number[i] = '\0';
+    i++;
+    
+    int j = 0;
+    while (str[i] != '\n') {
+        char num[4];
+        int k = 0;
+        while (str[i] != ' ' && str[i] != '\n') {
+            num[k] = str[i];
+            k++;
+            i++;
+        }
+        num[k] = '\0';
+        s->marks[j] = atoi(num);
+        j++;
+        if (str[i] = ' ') {
+            i++;
+        }
+
+    }
+]
+
+void read_students_from_file(char *filename, student *s, int *num_students) {
+    FILE *fp = fopen(filename, "r");
+    if (*fp == NULL) {
+        prinf("ERROR: Could not open file");
+        exit(1);
+    }
+    int i = 0;
+    while (feof(fp) != True) {
+        read_student(fp, &s[i]);
+        i++;
+    }
+    *num_students = i;
+}
+
+void highest_marks(const char *filename) {
+
+    student s[100];
+    int num_students;
+    read_students_from_file(filename, &s, &num_students);
+    
+    int highest_avg = 0;
+    for (int i = 0; i < num_students; i++) {
+        int sum = 0;
+        for (int j = 0; j < 10; j++) {
+            sum += s[i].marks[j];
+        }
+        int avg = sum / 10;
+
+        if (avg > highest_avg) {
+            highest_avg = avg;
+        }
+    }
+    for (int i = 0; i < num_students; i++) {
+        int sum = 0;
+        for (int j = 0; j < 10; j++) {
+            sum += s[i].marks[j];
+        }
+
+        if (sum / 10 >= highest_avg) {
+            printf("%s", s[i].student_number);
+        }
+    }
 }
