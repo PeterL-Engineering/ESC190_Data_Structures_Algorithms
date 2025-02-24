@@ -34,6 +34,4 @@ void create_LL_from_dat(LL** p_p_LL, int* data_arr, int size){
         prev = cur;
         i++;
     }
-
-
 }
