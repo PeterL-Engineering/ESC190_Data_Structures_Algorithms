@@ -76,3 +76,8 @@ int main() {
     return 0;
 }
 
+// Send notes relating to PID Controller
+// Angle calculation? Test PID & describe what outputs and inputs mean (documentation)
+// Takes in the same number of inputs as sensors there are on the watercraft
+// Distance measurement between somehting (water, motor) for sensor
+
