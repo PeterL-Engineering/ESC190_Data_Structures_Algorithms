@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 // Lab 3
 
 void print_student(student1 *student) {
@@ -194,3 +196,87 @@ void highest_marks(const char *filename) {
         }
     }
 }
+
+// 2012 Midterm
+
+// Q. 1 a
+
+const int x = 10;
+int y = 5;
+if (x = 20) y++;
+printf("x = %d, y = %d\n", x, y);
+
+// Error with if condition - x is a const int and x = 20 is an assignment
+
+// Q. 1 b
+
+int x = 99L;
+int y = 0xa9s;
+printf("%d, %d\n", x, y);
+
+// x is a long int so perhaps warning, y is a hexadecimal with an additional char ("s") won't compile
+
+// Q. 1 c
+
+int x = -1;
+if (x) printf("This is true.\n");
+else printf("I don't think so!\n");
+
+// Should print "This is true." since any nonzero values is "True"
+
+// Q. 1 d
+
+char x = 500;
+if (x == 500) printf("This is true.\n");
+else printf("I don't think so!\n");
+
+// A char can only store 8 bits max (0 - 255) so x will only store the first 8 bits of binary 500
+// This means that x != 500 so "I don't think so!"
+
+// Q. 1 e
+
+int x = 20;
+if (x < 10) {
+    printf("Too small!\n");
+    printf("Try again...\n");
+}
+else{
+    printf("Okey-dokey.\n");
+}
+
+//  "Okey-dokey."
+
+// Q. 1 f
+
+int i = 3;
+do { printf("%d...\n", i); 
+} while (--i > 0);
+printf("Go!\n");
+// "3..."
+// "2..."
+// "1..."
+// "Go!"
+
+// Q. 1 g
+
+int x = 10, *y = &x, z = 20;
+printf("%d, %d, %d\n", x, *y, z);
+*y = 5;
+printf("%d, %d, %d\n", x, *y, z);
+y = &z;
+printf("%d, %d, %d\n", x, *y, z);
+
+// "10, 10, 20"
+// "5, 5, 20"
+// "5, 20, 20"
+
+// Q. 1 h
+
+double a[] = {-3.1415, 0, 1.5, 2.7e14, 9999};
+double *p = a;
+while (*p++ != 9999) {
+    printf("%g, ", *p);
+}
+printf("\n");
+
+// "0, 1.5, 2.7e14,"
