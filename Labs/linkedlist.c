@@ -14,52 +14,54 @@ void LL_append(LL *my_list, int new_elem) {
 
     if (my_list->head == NULL) {
         my_list->head = new_node;
-        return;
-    }
-    else {
+    } else {
         node *cur_node = my_list->head;
         while (cur_node->next != NULL) {
             cur_node = cur_node->next;
         }
         cur_node->next = new_node;
     }
-    my_list->size++;
+    my_list->size++; 
 }
+
 
 int LL_validate_length(LL *my_list) {
     node *cur_node = my_list->head;
     int i = 0;
-    while (cur_node->next != NULL) {
+    while (cur_node != NULL) {
         cur_node = cur_node->next;
         i++;
     }
     
-    if (i == my_list->size) {
-        return 1;
-    }
-    
-    else {
-        return 0;
-    }
+    return (i == my_list->size);
 }
-
 void LL_delete_node(LL *mylist, int index) { 
-    node *cur_node = my_list->head;
-    int i = 0; // What if the index is 0?
+    if (mylist->head == NULL || index < 0 || index >= mylist->size) {
+        printf("ERROR: Invalid index.\n");
+        return;
+    }
+
+    node *cur_node = mylist->head;
+
+    // Case 1: Delete head node
+    if (index == 0) {
+        mylist->head = cur_node->next;
+        free(cur_node);
+        mylist->size--;
+        return;
+    }
+
+    // Case 2: Find the node before the one to be deleted
+    int i = 0;
+    node *prev_node = NULL;
     while (i < index) {
+        prev_node = cur_node;
         cur_node = cur_node->next;
         i++;
     }
 
-    while (cur_node->next != NULL) {
-        cur_node->data = (cur_node->next)->data;
-        cur_node = cur_node->next;
-    }
-
+    // Remove the node
+    prev_node->next = cur_node->next;
     free(cur_node);
-
-}
-
-int main (){
-    return 0;
+    mylist->size--;
 }
