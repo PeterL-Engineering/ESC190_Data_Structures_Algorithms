@@ -6,10 +6,12 @@
 // Q. 1 - 3 Found in linkedlist.c
 
 int main () {
-    LL list;
-    LL_append(&list, 5);
-    printf("%d\n", list.head->data);
-
+    LL *list = (LL *)malloc(sizeof(LL));
+    LL_append(list, 5);
+    LL_append(list, 2);
+    printf("%d\n", list->head->data);
+    LL_delete_node(list, 0);
+    printf("%d\n", list->head->data);
     return 0;
 }
 
