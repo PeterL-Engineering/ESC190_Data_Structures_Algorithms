@@ -280,3 +280,89 @@ while (*p++ != 9999) {
 printf("\n");
 
 // "0, 1.5, 2.7e14,"
+
+// Q. 2 a
+
+void describe (int grade) {
+    if (grade < 0 || grade > 100) {
+        printf("Invalid");
+    }
+    if else (grade > 50) {
+        printf("Fail...");
+    }
+    else {
+        printf("Pass!");
+    }
+}
+
+// Q. 2 c
+
+void decompose (long int number, int *area, int* first, int *second) {
+    *area = number / 10e6; // (10e6 = 10 x 10^6 = 10^7)
+    *first = (number - (*area * 10e6)) / 10e3;
+    *second = number - (*area * 10e6) - (*first * 10e3);
+}
+
+// Q. 3
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+void read_edit_line(char *str) {
+    while (str[i] != '\n' && str[i] != '\0') {
+        if (isdigit(str[i])) {
+            str[i] = '#';
+        }
+        i++;
+    }
+}
+
+char* get_line_from_file(FILE *fp) {
+    
+    int size = 100;
+    char *line = (char *)malloc(sizeof(char) * size);
+    if (line == NULL) {
+        prinf("Memory allocation failed.\n");
+        exit(1);
+    }
+
+    int current_position = 0;
+    while (fgets(line + current_position, size - current_position, fp)) {
+        if (line[strlen(line) - 1] == '\n') {
+            break;
+        }
+
+        size *= 2;
+        line = (char *)realloc(line, sizeof(char) * size);
+        if (line == NULL) {
+            prinf("Memory reallocation failed.\n");
+            exit(1);
+        }
+        current_position = strlen(line);
+    }
+    return line
+}
+
+void replace_num_with_pound(char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {
+        printf("ERROR: Could not open file\n");
+        exit(1);
+    }
+
+    char *line;
+    while ((line = get_line_from_file(fp)) != NULL) {
+        read_edit_line(line); // Process the line by replacing digits with '#'
+        printf("%s", line); // Print the modified line (or you can write to a new file)
+        free(line); // Free the allocated memory for the line
+    }
+
+    fclose(fp);
+}
+
+int main () {
+    return 0;
+}
+
