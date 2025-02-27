@@ -366,3 +366,138 @@ int main () {
     return 0;
 }
 
+// 2024 Q. 5
+
+typedef struct node {
+    int data;
+    struct node *next;
+} node;
+
+typedef struct LL {
+    node * head;
+} LL;
+
+int length (LL *L) {
+    node * cur_node = LL->head;
+    int count = 0;
+    while(cur_node->next != NULL) {
+        cur_node = cur_node->next;
+        count++;
+    }
+
+    return count;
+}
+
+void compare(const void *a, const void *b) {
+    return (*(int*)a - *(int*)b);
+}
+
+int median (LL *L) {
+    int size = length(L);
+    int data[size];
+    int i = 0;
+    node * cur_node = LL->head;
+    while(cur_node->next != NULL) {
+        data[i] = cur_node->data;
+        cur_node = cur_node->next;
+        i++;
+    }
+
+    qsort(data, size, sizeof(int), compare);
+ 
+    return data[size / 2];
+
+}
+
+// Q. 6
+
+char *generate_strings(char *alphabet, int k) {
+    int num_strings = pow(strlen(alphabet), k);
+    char *ret = (char *)malloc(sizeof(char) * (k + 1) * num_strings);
+    for (int i = 0; i < num_strings; i++) {
+        int j;
+        int temp = i;
+        for (j = 0; j < k; j++){
+        ret[i*(k+1) + j] = alphabet[temp % strlen(alphabet)];
+        temp /= strlen(alphabet);
+    }
+    ret[i*(k+1) + k] = '\n';
+    }
+    return ret;
+}
+
+
+typedef struct business {
+    int phone_number[10];
+    char *name;
+}
+
+char *read_line_from_file(const char *filename) {
+    char *line;
+    int cur_len = 5;
+    do {
+        FILE *fp = fopen(filename, "r");
+        if (!fp) {
+            prinf("ERROR: Could not open file");
+            exit(1);
+        }
+        line = (char *)malloc(sizeof(char) * cur_len);
+        if (line[strlen(line) - 1] != "\n") {
+            cur_len *= 2;
+        }
+        fclose(fp);
+    } while (line[strlen(line) - 1] != "\n");
+
+    return line;
+}
+
+void read_numbers(const char *filename, business **whitepages, int *size) {
+
+    FILE *fp = fopen(filename, "r");
+    if (!fp) {
+        prinf("ERROR: Could not open file");
+        exit(1);
+    }    
+
+    char *temp[100];
+    fgets(temp, 100, fp);
+    *size = atoi(temp);
+    fclose(fp);
+
+    *whitepages = (business *)malloc(sizeof(business) * *size);
+
+    int i = 0;
+    char *line;
+    for (i; i < size; i++){
+        line = read_line_from_file(filename);
+        int j = 0;
+        char *temp[10];
+
+        while (line[j] != '\t') {
+            if (line[j] != '-') {
+                temp[j] = line[j];
+            }
+        j++;
+        }
+        whitepages[i]phone_number = atoi(temp);
+        whitepages[i]->name = *(line + j);
+        free(line);
+    }
+}
+
+// Q. 4
+
+typdef struct daylight {
+    int hours;
+    int minutes;
+} daylight;
+
+void create_daylight_pt_block(daylight **daylight, int *data, int n) {
+    int i = 0;
+    *daylight = (daylight *)malloc(sizeof(daylight * (n/2)));
+    for (i; i < n/2; i++) {
+        daylight[i]->hours = data[2 * i];
+        daylight[i]->minutes = data[(2* i) + 1];
+    }
+
+}
