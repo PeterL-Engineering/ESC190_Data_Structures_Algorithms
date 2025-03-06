@@ -59,7 +59,11 @@ houses = [[7, 6, 7, 8, 9, 20],
 
 cost = [[0] * N,
         [0] * N,
-        [0] * N]
+        [0] * N] #R, G, B
+
+# cost = [[0, 0, 0, 0, 0, 0]
+#         [0, 0, 0, 0, 0, 0]
+#         [0, 0, 0, 0, 0, 0]]
 
 
 
@@ -95,12 +99,19 @@ for i in range(N-2, -1, -1):
     cur_min_col = -1
     for col in [0, 1, 2]:
         if col == cols[i+1]:
-            continue
+            continue # If the next house is the same colour, skip
         if cost[col][i] < cur_min:
             cur_min = cost[col][i]
             cur_min_col = col
     cols[i] = cur_min_col
 
+# Solution dictionary
+
+sol = {}
+for i in range(N):
+    sol[i] = ()
+    for col in [0, 1, 2]:
+        sol[i][col] = -1
 
 def paint_house_cost(houses, col, i):
     '''Return the cost of painting houses
@@ -115,7 +126,30 @@ def paint_house_cost(houses, col, i):
         if color == col:
             continue
         cost_color_i = paint_house_cost(houses, color, i-1)
+                    # Cost of painting houses 0, 1, ...
+                    # with the i-1th house painted with color color
+
         if cost_color_i < cur_min:
             cur_min = cost_color_i
             cur_min_col = color
+
+            # Cur_min: the smaller of the total costs
+            # up to i-1 with the two columns that are allowed
+            # Cur_min_col: The color that gives the smaller
+            # total cost
+    sol[i][col] = cur_min_col
     return houses[col][i] + cur_min
+
+######################################
+
+# Greedy Algorithms
+
+    # Given a denomination (d1, d2, d3, ...)
+    # Find the smallest number of coins that can be used to make x
+
+# Greedy Algorithm
+    # 1. Sort the denomination in descending order
+    # 2. Take as many of the largest denomnation coins possible
+    # 3. Take as many of the second largest ...
+
+    
