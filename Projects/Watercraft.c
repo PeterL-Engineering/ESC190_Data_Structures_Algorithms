@@ -19,6 +19,11 @@ void initialize_PID(PIDController* pid, double Kp, double Ki, double Kd){
     (*pid).prev_time = clock();
 }
 
+double system_response(double current_angle, double pid_output) {
+    double K = 0.5; // System gain
+    return current_angle + K *pid_output;
+}
+
 void PID_Controller(PIDController* pid, double pitch_target, double height_target, double curr_pitch, double curr_height, double* pitch_output, double* height_output){
     clock_t curr_time = clock();
     double dt = ((double)(curr_time - (*pid).prev_time)) / CLOCKS_PER_SEC; // Convert to seconds
@@ -50,7 +55,7 @@ void PID_Controller(PIDController* pid, double pitch_target, double height_targe
 
 int main() {
     PIDController pid;
-    initialize_PID(&pid, 1.0, 0.1, 0.01); // Random Gains
+    initialize_PID(&pid, 0.5, 0.01, 0); // Derivative term causes exponential increase and oscillation
 
     double pitch_target = 5.0, height_target = 10.0;
     double curr_pitch = 3.0, curr_height = 8.0;
@@ -63,8 +68,12 @@ int main() {
     printf("Previous Pitch Error: %.2f, Integral Pitch: %.2f\n", pid.prev_pitch_err, pid.integral_pitch);
     printf("Previous Height Error: %.2f, Integral Height: %.2f\n", pid.prev_height_err, pid.integral_height);
 
-    // Simulating a single step of PID control
-    PID_Controller(&pid, pitch_target, height_target, curr_pitch, curr_height, &pitch_output, &height_output);
+    for (int t = 0; t < 21; t++) {
+        // Simulating a single step of PID control
+        PID_Controller(&pid, pitch_target, height_target, curr_pitch, curr_height, &pitch_output, &height_output);
+        curr_pitch = system_response(curr_pitch, pitch_output);
+        printf("Time: %d, Control: %f, Angle: %f\n", t, pitch_output, curr_pitch);
+    }
 
     // Print values after PID step
     printf("\nAfter PID Step:\n");
@@ -76,8 +85,4 @@ int main() {
     return 0;
 }
 
-// Send notes relating to PID Controller
-// Angle calculation? Test PID & describe what outputs and inputs mean (documentation)
-// Takes in the same number of inputs as sensors there are on the watercraft
-// Distance measurement between somehting (water, motor) for sensor
 
