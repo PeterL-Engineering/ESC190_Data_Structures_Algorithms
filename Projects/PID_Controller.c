@@ -74,10 +74,11 @@ void PID_Controller(PIDController* pid, double pitch_target, double height_targe
 }
 
 int main() {
+    // Tune Kp, Ki, Kd terms to see if they can fix Kd
     srand(time(NULL));  // Seed random number generator
 
     PIDController pid;
-    initialize_PID(&pid, 0.8, 0.01, 0);  // Derivative term disabled due to strange exponential growth
+    initialize_PID(&pid, 0.8, 0.01, 0.001);  // Derivative term disabled due to strange exponential growth
 
     double pitch_target = 5.0, height_target = 10.0;
     double curr_pitch = 3.0, curr_height = 8.0;
