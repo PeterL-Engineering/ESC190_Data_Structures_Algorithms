@@ -3,9 +3,6 @@
 #include <time.h>
 #include <math.h>
 
-#define NOISE_STDDEV 1  // Adjust noise intensity
-#define NOISE_MEAN 0
-
 typedef struct {
     double Kp, Ki, Kd;
     double integral_pitch, integral_height;
@@ -13,13 +10,6 @@ typedef struct {
     clock_t prev_time;
 } PIDController;
 
-// Function to generate Gaussian noise using Box-Muller transform
-double gaussian_noise(double mean, double stddev) {
-    double u1 = (double)rand() / RAND_MAX;
-    double u2 = (double)rand() / RAND_MAX;
-    double z = sqrt(-2.0 * log(u1)) * cos(2.0 * M_PI * u2); // Box-Muller transform
-    return mean + z * stddev;
-}
 
 void initialize_PID(PIDController* pid, double Kp, double Ki, double Kd){
     pid->Kp = Kp;
@@ -34,8 +24,7 @@ void initialize_PID(PIDController* pid, double Kp, double Ki, double Kd){
 
 double system_response(double current_angle, double pid_output) {
     double K = 0.5; // System gain
-    double noise = gaussian_noise(0, 2.0); // Large noise strength
-    return current_angle + K * pid_output + noise;
+    return current_angle + K * pid_output;
 }
 
 void PID_Controller(PIDController* pid, double pitch_target, double height_target, 
@@ -46,8 +35,8 @@ void PID_Controller(PIDController* pid, double pitch_target, double height_targe
     if (dt < 1e-6) dt = 1e-6; // Prevent division by zero
 
     // Add noise to sensor readings
-    double noisy_pitch = curr_pitch + gaussian_noise(NOISE_MEAN, NOISE_STDDEV);
-    double noisy_height = curr_height + gaussian_noise(NOISE_MEAN, NOISE_STDDEV);
+    double noisy_pitch = curr_pitch;
+    double noisy_height = curr_height;
 
     // Calculate Errors
     double pitch_err = pitch_target - noisy_pitch;
@@ -75,10 +64,9 @@ void PID_Controller(PIDController* pid, double pitch_target, double height_targe
 
 int main() {
     // Tune Kp, Ki, Kd terms to see if they can fix Kd
-    srand(time(NULL));  // Seed random number generator
 
     PIDController pid;
-    initialize_PID(&pid, 0.8, 0.01, 0);  // Derivative term disabled due to strange exponential growth
+    initialize_PID(&pid, 1.5, 0.5, 0);  // Derivative term disabled due to strange exponential growth
 
     double pitch_target = 5.0, height_target = 10.0;
     double curr_pitch = 3.0, curr_height = 8.0;
