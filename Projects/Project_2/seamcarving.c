@@ -1,5 +1,6 @@
 #include "c_img.h"
 #include "seamcarving.h"
+#include <math.h>
 
 void calc_energy(struct rgb_img *im, struct rgb_img **grad) {
     '''compute the dual-gradient energy function, and place it in the struct rgb_img *grad'''
@@ -17,7 +18,7 @@ void calc_energy(struct rgb_img *im, struct rgb_img **grad) {
             int G_x = get_pixel(im, i, j + 1, 1) -  get_pixel(im, i, j - 1, 1);
             int B_x = get_pixel(im, i, j + 1, 2) -  get_pixel(im, i, j - 1, 2);
 
-            int Delta_x_squr = // R_x ^2 ...
+            int Delta_x_squr = pow(R_x, 2) + pow(G_x, 2) + pow(B_x, 2);
 
             // Calculating Delta Y
 
@@ -25,9 +26,12 @@ void calc_energy(struct rgb_img *im, struct rgb_img **grad) {
             int G_y = get_pixel(im, i + 1, j, 1) -  get_pixel(im, i - 1, j, 1);
             int B_y = get_pixel(im, i + 1, j, 2) -  get_pixel(im, i - 1, j, 2);
 
-            int Delta_y_squr = // R_x ^2 ...            
+            int Delta_y_squr = pow(R_y, 2) + pow(G_y, 2) + pow(B_y, 2);
+            
+            // Calculating Gradient
 
-
+            int energy = pow((Delta_x_squr + Delta_y_squr), 0.5);
+            uint8_t pixel_value = (uint8_t)(energy / 10);
             
         }
     }

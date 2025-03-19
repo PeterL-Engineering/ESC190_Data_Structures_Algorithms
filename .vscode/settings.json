@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "W3_Pointers.C": "cpp",
-        "midterm_1": "cpp"
+        "midterm_1": "cpp",
+        "cmath": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
