@@ -50,5 +50,3 @@ void remove_seam(struct rgb_img *src, struct rgb_img **dest, int *path) {
     '''creates the destination image, and writes to it the source image, with the seam removed'''
 
 }
-
-fjfjfj
