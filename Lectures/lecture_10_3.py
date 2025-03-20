@@ -73,11 +73,73 @@ def breadth_first_traversal(g, start_name):
                     DS.add(cur.data)
                 cur = cur.next
 
-airports = Graph2()
-airports.add_node("YYZ")
-airports.add_node("YVR")
-airports.add_node("JFK")
+def depth_first_traversal(g, start_name):
+    start_i = g.node_names(start_name)
+    visited = [False] * g.num_nodes
+    DS = ds.Stack()
+    DS.add(start_i)
+    
+    # Keep getting a node for DS, adding all its neighbours
+    # And hten visiting the node
 
-airports.put_edge("YVR", "YYZ")
-airports.put_edge("YYZ", "YVR")
-airports.put_edge("YYZ", "JFK")
+    while not DS.is_empty():
+        cur = DS.get()
+        if not visited[cur]:
+            print(g.node_names_rev[cur])
+            visited[cur] = True
+
+            # Now add all the neighbours 
+            # (nodes with an edge from cur to DS)
+            # to be visited later
+
+            cur = g.nodes[cur].head
+            while cur:
+                if not visited(cur.data):
+                    DS.add(cur.data)
+                cur = cur.next
+
+def DFS_recuseive(g, cur, visited):
+    if visited == None:
+        visited = [False] * g.num_nodes
+    cur_i = g.node_names[cur]
+    cur_neighbour = g.nodes[cur_i].head
+    visited[cur_i] = True
+    print(cur)
+    while cur_neighbour:
+        if not visited[g.node_names[cur_neighbour.data]]:
+            DFS_recuseive(g, cur_neighbour.data, visited)
+
+# node_names["YYZ"] = 0
+# node_names_rev[0] = "YYZ"            
+
+if __name__ == '__main__':
+    airports = Graph2()
+    airports.add_node("YYZ")
+    airports.add_node("YVR")
+    airports.add_node("JFK")
+    airports.add_node("YUL")
+    airports.add_node("LAX")
+    airports.add_node("SFO")
+    airports.add_node("YXZ")
+
+    # 0 YYZ Neighbours: YUL -> JFK -> YVR -> NULL
+    # 1 YVR Neighbours: YVR -> NULL
+    # 2 JFK Neighbours: LAX -> NULL
+    # 3 YUL Neighbours: YXZ -> NULL
+    # 4 LAX Neighbours: SFO -> NULL
+    # 5 SFO Neighbours: NULL
+    # 6 YXZ Neighbours: NULL
+
+    airports.put_edge_name("YVR", "YYZ")
+    airports.put_edge_name("YYZ", "YVR")
+    airports.put_edge_name("YYZ", "JFK")
+    airports.put_edge_name("YYZ", "YUL")
+    airports.put_edge_name("JFK", "LAX")
+    airports.put_edge_name("LAX", "SFO")
+    airports.put_edge_name("YUL", "YXZ")
+
+    depth_first_traversal(airports, "YVR")
+        #     YYZ -> YUL -> YXZ
+        #    / ^ \
+        #   v /   v
+        #  YVR    JFK -> LAX-> SFO
