@@ -98,7 +98,7 @@ def depth_first_traversal(g, start_name):
                     DS.add(cur.data)
                 cur = cur.next
 
-def DFS_recuseive(g, cur, visited):
+def DFS_recursive(g, cur, visited):
     if visited == None:
         visited = [False] * g.num_nodes
     cur_i = g.node_names[cur]
@@ -107,7 +107,8 @@ def DFS_recuseive(g, cur, visited):
     print(cur)
     while cur_neighbour:
         if not visited[g.node_names[cur_neighbour.data]]:
-            DFS_recuseive(g, cur_neighbour.data, visited)
+            DFS_recursive(g, cur_neighbour.data, visited)
+        cur_neighbour = cur_neighbour.next
 
 # node_names["YYZ"] = 0
 # node_names_rev[0] = "YYZ"            
