@@ -55,18 +55,16 @@ void dynamic_seam(struct rgb_img *grad, double **best_arr) {
     int height = grad->height;
     int width = grad->width;
 
-    // Allocate memory for 2 rows only
-    double *prev_row = (double *)malloc(width * sizeof(double));
-    double *curr_row = (double *)malloc(width * sizeof(double));
-    
-    if (!prev_row || !curr_row) {
+    // Allocate memory for all rows in best_arr
+    *best_arr = (double *)malloc(height * width * sizeof(double));
+    if (*best_arr == NULL) {
         printf("Memory allocation failed\n");
         exit(1);
     }
 
-    // Initialize first row
+    // Initialize the first row
     for (int j = 0; j < width; j++) {
-        prev_row[j] = get_pixel(grad, 0, j, 0);
+        (*best_arr)[j] = get_pixel(grad, 0, j, 0);
     }
 
     // Compute DP row by row
@@ -74,25 +72,15 @@ void dynamic_seam(struct rgb_img *grad, double **best_arr) {
         for (int j = 0; j < width; j++) {
             double energy = get_pixel(grad, i, j, 0);
 
-            // Find min cost from previous row
-            double min_cost = prev_row[j]; // Middle
-            if (j > 0) min_cost = fmin(min_cost, prev_row[j - 1]); // Left
-            if (j < width - 1) min_cost = fmin(min_cost, prev_row[j + 1]); // Right
+            // Find min cost from the previous row
+            double min_cost = (*best_arr)[(i - 1) * width + j]; // Middle
+            if (j > 0) min_cost = fmin(min_cost, (*best_arr)[(i - 1) * width + j - 1]); // Left
+            if (j < width - 1) min_cost = fmin(min_cost, (*best_arr)[(i - 1) * width + j + 1]); // Right
 
-            curr_row[j] = energy + min_cost;
+            // Store the computed value for the current cell
+            (*best_arr)[i * width + j] = energy + min_cost;
         }
-
-        // Swap pointers instead of copying arrays
-        double *temp = prev_row;
-        prev_row = curr_row;
-        curr_row = temp;
     }
-
-    // Store the final row in best_arr (caller must allocate memory)
-    *best_arr = prev_row;
-
-    // Free extra memory (curr_row is unused after the last swap)
-    free(curr_row);
 }
 
 void recover_path(double *best, int height, int width, int **path) {
