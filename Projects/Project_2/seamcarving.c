@@ -2,6 +2,9 @@
 #include "seamcarving.h"
 #include <math.h>
 #include <stdint.h>
+#include <stdlib.h> // malloc and exit
+#include <float.h> // double
+#include <stdio.h> // printf
 
 void compute_delta(struct rgb_img *im, int i1, int i2, int j1, int j2, int *delta_sq) {
     int R = get_pixel(im, i1, j1, 0) - get_pixel(im, i2, j2, 0);
@@ -90,6 +93,50 @@ void dynamic_seam(struct rgb_img *grad, double **best_arr) {
 
 void recover_path(double *best, int height, int width, int **path) {
     '''allocates a path through the minimum seam as defined by the array best'''
+    // allocate memory 
+    *path = (int *)malloc(height * sizeof(int));
+    // account for edge case
+    if (*path == NULL) {
+        printf("Cannot allocate memory\n");
+        exit(1);
+    }
+
+    // col with min energy in bottom row
+    int min_energy_col = 0;
+    double min_val = best[(height - 1) * width]; // init to first pixel's energy in last row
+
+    for (int j = 1; j < width; j++) {
+        if (best[(height - 1) * width + j] < min_value) {
+            min_value = best[(height - 1) * width + j];
+            min_col = j;
+        }
+    } // loop through all the cols in last row to find col with min energy
+
+    // put the min col into the path
+    (*path)[height - 1] = min_col;
+
+    // start at second last row adn loop upwards row by row to find the min energy cols
+    for (int i = height - 2; i >= 0; i--) {
+        int j = (*path)[i + 1]; // col of min energy below for cur seam pos
+        int best_j = j;
+        double min_cost = best[i * width + j]; // init min with energy at middle
+
+        // left diagonal – check boundary – if in boundary check energy, update min if req 
+        if (j > 0 && best[i * width + (j - 1)] < min_cost) {
+            min_cost = best[i * width + (j - 1)];
+            best_j = j - 1;
+        }
+
+        // right diagonal – check boundary – if in boundary check energy, update min if req
+        if (j < width - 1 && best[i * width + (j + 1)] < min_cost) {
+            best_j = j + 1;
+        }
+
+        // put the min col into the path; if all dirs are the same defaults to middle 
+        (*path)[i] = best_j;
+    }
+}
+
 
 }
 void remove_seam(struct rgb_img *src, struct rgb_img **dest, int *path) {
