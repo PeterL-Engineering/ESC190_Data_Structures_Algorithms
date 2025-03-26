@@ -152,10 +152,12 @@ void remove_seam(struct rgb_img *src, struct rgb_img **dest, int *path) {
 
     create_img(dest, height, width);
 
+    int src_width = src->width;
+
     // Copy pixels from src to dest, skipping the seam
     for (int i = 0; i < height; i++) {
         int new_j = 0; // Tracks the column index in the new image
-        for (int j = 0; j < src->width; j++) {
+        for (int j = 0; j < src_width; j++) {
             if (j == path[i]) {
                 continue; // Skip the seam pixel
             }
