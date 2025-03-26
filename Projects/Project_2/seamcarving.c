@@ -167,7 +167,3 @@ void remove_seam(struct rgb_img *src, struct rgb_img **dest, int *path) {
         }
     }
 }
-
-int main() {
-    return 0;
-}
