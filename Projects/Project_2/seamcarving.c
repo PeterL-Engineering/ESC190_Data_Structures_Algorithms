@@ -95,7 +95,6 @@ void dynamic_seam(struct rgb_img *grad, double **best_arr) {
     free(curr_row);
 }
 
-
 void recover_path(double *best, int height, int width, int **path) {
     // Allocate memory
     *path = (int *)malloc(height * sizeof(int));
@@ -169,6 +168,29 @@ void remove_seam(struct rgb_img *src, struct rgb_img **dest, int *path) {
     }
 }
 
+
 int main() {
+    // Test the functionality of your seam carving code
+
+    // Assuming you have some image data to work with
+    struct rgb_img *image;  // Your image structure
+    struct rgb_img *grad;   // Gradient image
+
+    // Load image here (you may need a function to load an image into 'image')
+
+    calc_energy(image, &grad);  // Calculate energy of the image
+
+    double *best_arr = NULL;  // To store best path array
+    dynamic_seam(grad, &best_arr);  // Calculate best seam path
+
+    int *path = NULL;
+    recover_path(best_arr, image->height, image->width, &path);  // Recover the seam path
+
+    // Example call to remove seam (you would probably load actual image data here)
+    struct rgb_img *output;
+    remove_seam(image, &output, path);
+
+    // Free allocated memory (e.g., for best_arr, path, and images)
+
     return 0;
 }
