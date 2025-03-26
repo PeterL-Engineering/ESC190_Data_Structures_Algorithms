@@ -97,8 +97,6 @@ void dynamic_seam(struct rgb_img *grad, double **best_arr) {
 
 
 void recover_path(double *best, int height, int width, int **path) {
-    // allocates a path through the minimum seam as defined by the array best
-    
     // Allocate memory
     *path = (int *)malloc(height * sizeof(int));
     if (*path == NULL) {
@@ -169,4 +167,8 @@ void remove_seam(struct rgb_img *src, struct rgb_img **dest, int *path) {
             new_j++; // Only increment in the destination image
         }
     }
+}
+
+int main() {
+    return 0;
 }
