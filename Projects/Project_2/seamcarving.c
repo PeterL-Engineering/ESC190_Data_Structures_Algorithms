@@ -168,3 +168,32 @@ void remove_seam(struct rgb_img *src, struct rgb_img **dest, int *path) {
         }
     }
 }
+
+void print_path(int *path, int height) {
+    printf("Recovered path: ");
+    for (int i = 0; i < height; i++) {
+        printf("%d ", path[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    double best[] = {
+        24.0, 22.0, 30.0, 15.0, 18.0, 19.0,
+        34.0, 45.0, 30.0, 38.0, 25.0, 33.0,
+        45.0, 43.0, 52.0, 38.0, 46.0, 39.0,
+        56.0, 58.0, 55.0, 66.0, 57.0, 60.0,
+        73.0, 72.0, 62.0, 82.0, 77.0, 76.0
+    };
+
+    int *path;
+    recover_path(best, 5, 6, &path);
+
+    print_array(best, height, width);
+    print_path(path, height);
+
+    // Free allocated memory
+    free(path);
+
+    return 0;
+}
