@@ -14,12 +14,12 @@ void compute_delta(struct rgb_img *im, int i1, int i2, int j1, int j2, int *delt
 }
 
 void calc_energy(struct rgb_img *im, struct rgb_img **grad) {
-    '''compute the dual-gradient energy function, and place it in the struct rgb_img *grad'''
-    int height = rgb_img->height;
-    int width = rgb_img->width;
+    // compute the dual-gradient energy function, and place it in the struct rgb_img *grad
+    int height = im->height;
+    int width = im->width;
 
     // Allocate memory for the gradient image
-    '''Idk if we need to modify the given struct'''
+    // Idk if we need to modify the given struct
 
     create_img(grad, height, width);    
 
@@ -97,7 +97,7 @@ void dynamic_seam(struct rgb_img *grad, double **best_arr) {
 
 
 void recover_path(double *best, int height, int width, int **path) {
-    '''allocates a path through the minimum seam as defined by the array best'''
+    // allocates a path through the minimum seam as defined by the array best
     
     // Allocate memory
     *path = (int *)malloc(height * sizeof(int));
@@ -144,7 +144,7 @@ void recover_path(double *best, int height, int width, int **path) {
 }
 
 void remove_seam(struct rgb_img *src, struct rgb_img **dest, int *path) {
-    '''creates the destination image, and writes to it the source image, with the seam removed'''
+    // creates the destination image, and writes to it the source image, with the seam removed
         
     // Allocate memory for the destination image
     int height = src->height;
@@ -167,4 +167,8 @@ void remove_seam(struct rgb_img *src, struct rgb_img **dest, int *path) {
             new_j++; // Only increment in the destination image
         }
     }
+}
+
+int main() {
+    return 0;
 }
