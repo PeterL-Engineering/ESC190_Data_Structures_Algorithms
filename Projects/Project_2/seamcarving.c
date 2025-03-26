@@ -187,7 +187,9 @@ int main() {
     };
 
     int *path;
-    recover_path(best, 5, 6, &path);
+    int height = 5;
+    int width = 6
+    recover_path(best, height, width, &path);
 
     print_array(best, height, width);
     print_path(path, height);
