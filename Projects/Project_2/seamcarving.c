@@ -99,7 +99,7 @@ void recover_path(double *best, int height, int width, int **path) {
     // Allocate memory
     *path = (int *)malloc(height * sizeof(int));
     if (*path == NULL) {
-        printf("Cannot allocate memory\n");
+        printf("ERROR: Could not allocate memory\n");
         exit(1);
     }
 
@@ -108,10 +108,11 @@ void recover_path(double *best, int height, int width, int **path) {
     double min_val = best[(height - 1) * width]; // Initialize to first pixel in last row
 
     for (int j = 1; j < width; j++) {
-        if (best[(height - 1) * width + j] < min_val) {
-            min_val = best[(height - 1) * width + j];
+        double current_val = best[(height - 1) * width + j];
+        if (current_val < min_val) {
+            min_val = current_val;
             min_col = j;
-        }
+        }  
     }
 
     // Store the minimum column in the path
