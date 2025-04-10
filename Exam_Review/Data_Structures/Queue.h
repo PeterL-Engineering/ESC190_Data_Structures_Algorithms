@@ -1,5 +1,5 @@
-#ifndef Q_H
-#define Q_H
+#ifndef Queue_H
+#define Queue_H
 
 #include "AL.h" 
 

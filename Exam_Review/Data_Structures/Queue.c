@@ -1,5 +1,5 @@
-#include "AL.h"
-#include "Q.h"
+#include "Array_List.h"
+#include "Queue.h"
 #include <stdio.h>
 #include <stdlib.h>
 

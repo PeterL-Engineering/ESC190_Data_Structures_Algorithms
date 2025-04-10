@@ -1,5 +1,5 @@
-#ifndef AL_H
-#define AL_H
+#ifndef Array_List_H
+#define Array_List_H
 
 #include <stdio.h>
 #include <stdlib.h>
