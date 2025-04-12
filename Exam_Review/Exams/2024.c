@@ -82,3 +82,72 @@ char *reverse_words(char *str) {
 
     return res;
 }
+
+// Q. 4 
+
+int is_increasing(int *arr, int sz) {
+    if (sz <= 1) {
+        return 1;
+    }
+
+    if (arr[0] > arr[1]) {
+        return 0;
+    } 
+    
+    else {
+        return is_increasing(arr + 1, sz - 1);
+    }
+}
+
+// Q. 5
+
+typedef struct CQ {
+    char *arr;
+    int front;
+    int sz;
+    int capacity;
+} CQ;
+
+void init(CQ **queue, int capacity) {
+    *queue = (CQ *)malloc(sizeof(CQ));
+    (*queue)->arr = (char *)malloc(capacity * sizeof(char));
+    (*queue)->front = 0;
+    (*queue)->sz = 0;
+    (*queue)->capacity = capacity;
+}
+
+void enqueue(CQ *queue, char elem) {
+    if (queue->sz == queue->capacity) {
+        int new_cap = queue->capacity * 2;
+        char *temp = (char *)malloc(new_cap * sizeof(char));
+
+        for (int i = 0; i < queue->sz; i++) {
+            temp[i] = queue->arr[(queue->front + i) % queue->capacity];
+        }
+
+        free(queue->arr);
+        queue->arr = temp;
+        queue->front = 0;
+        queue->capacity = new_cap;
+    }
+
+    int rear = (queue->front + queue->sz) % queue->capacity;
+    queue->arr[rear] = elem;
+    queue->sz++;
+}
+
+char dequeue(CQ *queue) {
+    if (queue->sz == 0) {
+        return '\0';  // or handle underflow
+    }
+
+    char res = queue->arr[queue->front];
+    queue->front = (queue->front + 1) % queue->capacity;
+    queue->sz--;
+    return res;
+}
+
+void free_queue(CQ *queue) {
+    free(queue->arr);
+    free(queue);
+}
