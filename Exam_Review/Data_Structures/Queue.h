@@ -16,8 +16,8 @@ typedef struct Queue {
 } queue;
 
 // Queue function declarations
-void create_queue(queue **p_q);
-void destroy_queue(queue *q);
+void init(queue **p_q);
+void free_queue(queue *q);
 void enqueue(queue *q, int data);
 void dequeue(queue *q);
 int front(queue *q);  // Optional: return front element

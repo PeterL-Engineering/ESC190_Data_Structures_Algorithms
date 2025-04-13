@@ -12,12 +12,12 @@
 
 // Queue (Q)
 
-void create_queue(queue **p_q) {
+void init(queue **p_q) {
     *p_q = malloc(sizeof(queue));
     create_list(&(*p_q)->list);
 }
 
-void destroy_queue(queue *q) {
+void free_queue(queue *q) {
     destroy_list(q->list);
     free(q);
 }
@@ -30,4 +30,11 @@ void dequeue(queue *q) {
     int res = q->list->array[0];
     delete_list(q->list, 0);
     return res;
+}
+
+int is_empty(queue *q) {
+    if (q->size == 0) {
+        return 1;
+    }
+    return 0;
 }

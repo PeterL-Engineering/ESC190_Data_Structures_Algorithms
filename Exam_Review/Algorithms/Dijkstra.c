@@ -75,3 +75,5 @@ float dijkstra(Graph *graph, Node **node_map, Node *start_node) {
     // Return the shortest distance to the goal node 
     return start_node->distance_from_start;  
 }
+
+// For graphs he could ask to use adjacency lists, matrices
