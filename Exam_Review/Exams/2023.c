@@ -89,3 +89,134 @@ void LL_append(LL *mylist, int new_val, int i) {
 
     mylist->size++;
 }
+
+// Q. 5
+
+typedef struct Matrix {
+    int **matrix;
+    int num_cols;
+    int num_rows;
+} Matrix;
+
+// Initialize a matrix of size n x m
+void init(Matrix **matrix, int n, int m) {
+    *matrix = (Matrix *)malloc(sizeof(Matrix));
+    (*matrix)->num_rows = n;
+    (*matrix)->num_cols = m;
+
+    (*matrix)->matrix = (int **)malloc(n * sizeof(int *));
+    for (int i = 0; i < n; i++) {
+        (*matrix)->matrix[i] = (int *)malloc(m * sizeof(int));
+    }
+}
+
+// Check if (i, j) is within bounds (0-based indexing)
+int in_bounds(Matrix *matrix, int i, int j) {
+    if (i < 0 || i >= matrix->num_rows || j < 0 || j >= matrix->num_cols) {
+        printf("ERROR: Index exceeds matrix size\n");
+        return 0;
+    }
+    return 1;
+}
+
+// Get element at (i, j) using 1-based indexing
+int get_elem(Matrix *matrix, int i, int j) {
+    if (!in_bounds(matrix, i - 1, j - 1)) {
+        return 0;
+    }
+    return matrix->matrix[i - 1][j - 1];
+}
+
+// Set element at (i, j) using 1-based indexing
+void set_elem(Matrix *matrix, int i, int j, int elem) {
+    if (!in_bounds(matrix, i - 1, j - 1)) {
+        return;
+    }
+    matrix->matrix[i - 1][j - 1] = elem;
+}
+
+// Add two matrices and return the result
+Matrix *matrix_sum(Matrix *matrix1, Matrix *matrix2) {
+    if (matrix1->num_rows != matrix2->num_rows || matrix1->num_cols != matrix2->num_cols) {
+        printf("ERROR: Matrix sizes do not match!\n");
+        return NULL;
+    }
+
+    Matrix *res;
+    init(&res, matrix1->num_rows, matrix1->num_cols);
+
+    for (int i = 0; i < matrix1->num_rows; i++) {
+        for (int j = 0; j < matrix1->num_cols; j++) {
+            int sum = get_elem(matrix1, i + 1, j + 1) + get_elem(matrix2, i + 1, j + 1);
+            set_elem(res, i + 1, j + 1, sum);
+        }
+    }
+
+    return res;
+}
+
+// Free memory used by matrix
+void free_matrix(Matrix *matrix) {
+    for (int i = 0; i < matrix->num_rows; i++) {
+        free(matrix->matrix[i]);
+    }
+    free(matrix->matrix);
+    free(matrix);
+}
+
+// Q. 6
+
+typedef struct PQ_elem {
+    int value;
+    int priority;
+} PQ_elemm;
+
+typedef struct PQ {
+    Al *list;
+    int sz;
+} PQ;
+
+void insert(PQ *pqueue, int value, int priority) {
+    PQ_elem *new_val;
+    new_val = (PQ_elem *)malloc(sizeof(PQ_elem));
+    new_val->value = value;
+    new_val->priorty = priority;
+    
+    // Find the index to insert the new eleme into the queue
+    int insert_ind = pqueue->sz;
+    while (insert_ind > 0 && pqueue->list->array[insert-ind - 1].priorty > priority) {
+        insert_ind--;
+    }
+
+    // Shift all the elements over one index
+    for(int i = pqueue->sz; i > insert_ind; i--) {
+        pqueue->list->array[i] = pqueue->list->array[i - 1];
+    }
+
+    // Insert the new element
+    pqueue->list->array[insert_ind] = new_val;
+    pqueue->sz++;
+}
+
+int extract_min(PQ *pqueue) {
+
+    // Find the min index
+    int min_ind = 0;
+    int min_prio = pqueue->list[0].priorty;
+    for (int i = 0; i < pqueue->sz; i++) {
+        if (pqueue->list->array[i].priority < min_prio) {
+            min_prio = pqueue->list->array[i].priority;
+            min_ind = i;
+        }
+    }
+
+    // Shift all the values over 
+    int min_val = pqueue->list->array[min_ind].value
+
+    for (int i = min_ind; i < pqueue->sz - 1; i++) {
+        pqueue->list->array[i] = pqueue->list->array[i + 1]; 
+    }
+
+    pqueue->sz--;
+    return min_val;
+}
