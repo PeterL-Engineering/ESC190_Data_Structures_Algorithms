@@ -220,3 +220,72 @@ int extract_min(PQ *pqueue) {
     pqueue->sz--;
     return min_val;
 }
+
+// Q. 10
+
+#define MAX_N 10
+
+// Swap utility
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Check if the given path is valid
+bool verify_friends(int path[], int path_len, bool friends[MAX_N][MAX_N]) {
+    for (int i = 0; i < path_len - 1; i++) {
+        if (!friends[path[i]][path[i + 1]]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Generate all permutations of friends array iteratively (Heap's algorithm)
+int longest_chain(bool friends[MAX_N][MAX_N], int n) {
+    int perm[MAX_N];
+    int c[MAX_N] = {0}; // control array for Heap's algorithm
+    int max_len = 0;
+
+    // Initialize with 0..n-1
+    for (int i = 0; i < n; i++) {
+        perm[i] = i;
+    }
+
+    // Try all lengths from n down to 2
+    for (int len = n; len >= 2; len--) {
+        // Reset for each length
+        for (int i = 0; i < len; i++) {
+            perm[i] = i;
+            c[i] = 0;
+        }
+
+        if (verify_friends(perm, len, friends)) {
+            return len;
+        }
+
+        int i = 0;
+        while (i < len) {
+            if (c[i] < i) {
+                if (i % 2 == 0) {
+                    swap(&perm[0], &perm[i]);
+                } else {
+                    swap(&perm[c[i]], &perm[i]);
+                }
+
+                if (verify_friends(perm, len, friends)) {
+                    return len;
+                }
+
+                c[i]++;
+                i = 0;
+            } else {
+                c[i] = 0;
+                i++;
+            }
+        }
+    }
+
+    return 0;
+}
