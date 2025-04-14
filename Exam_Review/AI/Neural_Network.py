@@ -47,7 +47,7 @@ class Node:
     def __init__(self, name, value=None):
         self.name = name
         self.value = value
-        self. edges = []
+        self.edges = []
 
     def add_edge(self, node, weight):
         self.edges.append({"node": node, "weight": weight})
@@ -115,3 +115,21 @@ for i in range(10):
     print(f"x[{neuron_7_acts[i][1]}])")
 
 # For graphs he could ask to use adjacency lists, matrices
+
+# -------------------------------------------------------------------
+
+''' 
+Let's suppose the weights and biases are stored in a txt file in the format below
+The first line is the dimension of the weights array and the second the biases array
+
+Starting at the fourth line, you have all the bias values with a space in between, then
+every line after is the weights for each output. In this case 6 lines of 4096 weights.
+
+4096 x 6
+1 x 6
+
+1 2 3 4 5 6
+3 4 5 6 7 8 ...
+1 5 6 8 9 0 ...
+
+'''
