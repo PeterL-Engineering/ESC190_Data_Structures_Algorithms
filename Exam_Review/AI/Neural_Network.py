@@ -23,7 +23,7 @@ z = np.zeros((1, 6))
 
 for k in range(6):
     # for j in range(4096):
-    #     z[0, k] == W[0, j, k] * x[j]
+    #     z[0, k] += W[0, j, k] * x[j]
     z[0, k] = np.dot(W[0, :, k], x)
     z[0, k] += b[0, k]
 
